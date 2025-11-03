@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Revisão do Quiz{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+
+    <div class="card text-center mb-12 bg-white border-2 border-purple-200 py-12 relative overflow-hidden">
+        <!-- Elementos decorativos suaves -->
+        <div class="absolute top-0 left-0 w-32 h-32 bg-purple-50 rounded-full -translate-x-16 -translate-y-16"></div>
+        <div class="absolute bottom-0 right-0 w-40 h-40 bg-blue-50 rounded-full translate-x-20 translate-y-20"></div>
+
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <div class="bg-gradient-primary w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Revisão Concluída!</h1>
+            <p class="text-xl text-gray-600 mb-6">Sua pontuação final foi:</p>
+            <div class="flex items-center justify-center">
+                <div class="bg-gradient-primary rounded-2xl px-8 py-6 shadow-lg">
+                    <p class="text-6xl font-bold text-white">
+                        {{ tentativa.pontuacao }}<span class="text-3xl text-white text-opacity-90">/{{ tentativa.respostas.count }}</span>
+                    </p>
+                </div>
+            </div>
+            <p class="mt-6 text-gray-600 text-lg">Veja abaixo o detalhamento de suas respostas.</p>
+        </div>
+    </div>
+
+    <div class="space-y-8">
+        {% for resposta in tentativa.respostas.all %}
+        <div class="card">
+            <div class="flex items-start mb-5">
+                <div class="{% if resposta.foi_correta %}bg-green-500{% else %}bg-red-500{% endif %} text-white font-bold rounded-lg w-10 h-10 flex items-center justify-center mr-4 flex-shrink-0">
+                    {% if resposta.foi_correta %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="flex-1">
+                    <p class="text-lg font-semibold text-gray-800">
+                        <span class="text-purple-600">Questão {{ forloop.counter }}:</span>
+                        {{ resposta.pergunta.texto_pergunta }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="ml-14 space-y-6">
+                <!-- SUA RESPOSTA -->
+                <div>
+                    <h4 class="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        Sua Resposta
+                    </h4>
+                    
+                    {% if not resposta.alternativa_selecionada %}
+                        <div class="p-4 rounded-xl bg-gray-100 border-2 border-gray-300 text-gray-700 flex items-center font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span class="text-gray-700">Você não respondeu esta questão.</span>
+                        </div>
+                    {% elif resposta.foi_correta %}
+                        <div class="p-4 rounded-xl bg-green-50 border-2 border-green-300 text-green-800 flex items-center font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-green-800">{{ resposta.alternativa_selecionada.texto_alternativa }}</span>
+                        </div>
+                    {% else %}
+                        <div class="p-4 rounded-xl bg-red-50 border-2 border-red-300 text-red-800 flex items-center font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-red-800">{{ resposta.alternativa_selecionada.texto_alternativa }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- RESPOSTA CORRETA (apenas se errou) -->
+                {% if not resposta.foi_correta and resposta.alternativa_selecionada %}
+                    <div>
+                        <h4 class="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Resposta Correta
+                        </h4>
+                        {% for alt in resposta.pergunta.alternativas.all %}
+                            {% if alt.eh_correta %}
+                            <div class="p-4 rounded-xl bg-blue-50 border-2 border-blue-300 text-blue-800 flex items-center font-medium">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="text-blue-800">{{ alt.texto_alternativa }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- JUSTIFICATIVA -->
+                <div>
+                    <h4 class="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Explicação
+                    </h4>
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 text-gray-800 rounded-r-xl font-medium">
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-gray-700 leading-relaxed">{{ resposta.pergunta.justificativa }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="text-center mt-12 pt-8 border-t border-gray-200">
+        <a href="{% url 'home' %}" class="btn-primary text-lg px-10 py-3 inline-flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Voltar ao Início
+        </a>
+    </div>
+</div>
+{% endblock %}

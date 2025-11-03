@@ -1,0 +1,12 @@
+# Arquivos de ambiente
+.env
+
+# Banco de dados
+db.sqlite3
+
+# Pasta de Mídia (Uploads)
+/media/
+
+# Cache do Python
+__pycache__/
+*.pyc

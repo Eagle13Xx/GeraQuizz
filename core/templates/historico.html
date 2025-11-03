@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Meu Histórico{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+        <div class="bg-gradient-primary w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Meu Histórico</h1>
+        <p class="text-gray-600">Acompanhe seu progresso nos quizzes realizados</p>
+    </div>
+
+    <div class="space-y-6">
+        {% for tentativa in tentativas %}
+        <div class="card group">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div class="mb-4 md:mb-0 flex-1">
+                    <div class="flex items-start">
+                        <div class="bg-gradient-to-br from-green-100 to-green-200 p-2 rounded-lg mr-4 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800 group-hover:text-purple-700 transition-colors duration-200">{{ tentativa.material.titulo }}</h2>
+                            <p class="text-sm text-gray-500 mt-1 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Realizado em: {{ tentativa.concluido_em|date:"d/m/Y H:i" }}
+                            </p>
+                            <div class="flex items-center mt-3">
+                                <div class="w-32 bg-gray-200 rounded-full h-2.5 mr-3">
+                                    <div class="bg-gradient-primary h-2.5 rounded-full" style="width: {% widthratio tentativa.pontuacao tentativa.respostas.count 100 %}%"></div>
+                                </div>
+                                <span class="text-lg font-bold text-gray-700">
+                                    {{ tentativa.pontuacao }} / {{ tentativa.respostas.count }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-3">
+                    <a href="{% url 'revisar_tentativa' tentativa.id %}" class="btn-primary flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Ver Revisão
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not tentativas %}
+        <div class="card text-center py-16">
+            <div class="bg-gradient-to-br from-gray-100 to-gray-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-700 mb-3">Nenhum quiz realizado</h3>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto">Você ainda não completou nenhum quiz. Explore os materiais disponíveis e teste seu conhecimento!</p>
+            <a href="{% url 'home' %}" class="btn-primary">Ver Quizzes Disponíveis</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

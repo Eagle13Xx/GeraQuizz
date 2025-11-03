@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Você Saiu{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto card mt-12 text-center">
+    
+    <h1 class="text-3xl font-bold text-dark-blue mb-4">Você Saiu</h1>
+    
+    <p class="text-gray-700 text-lg mb-8">
+        Sua sessão foi encerrada com sucesso.
+    </p>
+    
+    <a href="{% url 'login' %}" class="btn-primary w-full">
+        Fazer Login Novamente
+    </a>
+
+    <a href="{% url 'home' %}" class="block mt-4 text-sm text-primary-blue hover:underline">
+        Voltar para a Página Inicial
+    </a>
+
+</div>
+{% endblock %}

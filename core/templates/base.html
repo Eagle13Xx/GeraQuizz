@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeraQuizz | {% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            .bg-gradient-secondary { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+            .bg-gradient-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+            .bg-gradient-success { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+            .text-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .shadow-soft { box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05); }
+            .shadow-hover { box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.1); }
+            .btn-primary {
+                @apply py-3 px-6 bg-gradient-primary text-white font-semibold rounded-xl shadow-soft hover:shadow-hover transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-purple-300;
+            }
+            .btn-secondary {
+                @apply py-3 px-6 bg-gradient-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-hover transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-opacity-50 focus:ring-pink-300;
+            }
+            .card {
+                @apply bg-gradient-card rounded-2xl p-6 md:p-8 shadow-soft hover:shadow-hover transition-all duration-300 border border-white border-opacity-50 backdrop-blur-sm;
+            }
+            .input-field {
+                @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-300 focus:ring-4 focus:ring-purple-100 transition-all duration-200 bg-white bg-opacity-70 backdrop-blur-sm;
+            }
+
+            /* ===== FLASHCARD STYLES ===== */
+            .flashcard-container {
+                perspective: 1000px;
+            }
+
+            .flashcard {
+                transform-style: preserve-3d;
+                transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                @apply w-full h-80 cursor-pointer;
+            }
+
+            .flashcard.is-flipped {
+                transform: rotateY(180deg);
+            }
+
+            .card-face {
+                @apply absolute w-full h-full p-8 rounded-2xl shadow-soft border border-white border-opacity-50;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .card-front {
+                @apply bg-gradient-to-br from-white to-blue-50;
+            }
+
+            .card-back {
+                @apply bg-gradient-to-br from-purple-50 to-pink-50;
+                transform: rotateY(180deg);
+            }
+
+            .flashcard-nav-btn:disabled {
+                @apply opacity-50 cursor-not-allowed transform-none hover:shadow-soft;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 font-['Inter'] min-h-screen">
+
+    <nav class="bg-gradient-primary p-4 shadow-soft backdrop-blur-md bg-opacity-95">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-white text-2xl font-bold flex items-center">
+                <span class="bg-white bg-opacity-20 p-2 rounded-lg mr-2">🧠</span>
+                GeraQuizz
+            </a>
+
+            <div class="text-white flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'home' %}" class="hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition-all duration-200">Home</a>
+                    <a href="{% url 'historico_quiz' %}" class="hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition-all duration-200">Histórico</a>
+                    <a href="{% url 'upload_material' %}" class="hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition-all duration-200">Upload</a>
+
+                    <div class="flex items-center space-x-2 ml-4 pl-4 border-l border-white border-opacity-30">
+                        <span class="bg-white bg-opacity-20 p-1.5 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </span>
+                        <span class="font-medium">{{ user.username }}</span>
+                        <form method="POST" action="{% url 'logout' %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition-all duration-200">
+                                Sair
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:bg-white hover:bg-opacity-20 px-3 py-1 rounded-lg transition-all duration-200">Login</a>
+                    <a href="{% url 'registrar' %}" class="bg-white bg-opacity-20 px-3 py-1 rounded-lg hover:bg-opacity-30 transition-all duration-200">Registrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto my-10 px-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>
