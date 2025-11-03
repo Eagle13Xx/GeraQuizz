@@ -1,5 +1,6 @@
 # 🚀 GeraQuizz - Micro Tutor com IA
 ![Made with Django](https://img.shields.io/badge/Made%20with-Django-44B78B?style=for-the-badge&logo=django)
+
 GeraQuizz é uma aplicação web educacional desenvolvida em Python e Django. Ela transforma materiais de estudo (como slides de aula e PDFs) em ferramentas de revisão ativas, como quizzes interativos e flashcards, usando o poder da API Google Gemini.
 
 O objetivo é otimizar o tempo de professores e instrutores, automatizando a criação de avaliações, e ao mesmo tempo fornecer aos alunos uma ferramenta de estudo personalizada e eficaz.
